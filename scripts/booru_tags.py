@@ -14,7 +14,7 @@ from modules.shared import opts
 def load_config():
     try:
         with open(
-            "extensions\stable-diffusion-tag-from-danbooru\ext_config.json", "r"
+            "extensions\stable-diffusion-tag-from-boorus\ext_config.json", "r"
         ) as f:
             config = json.load(f)
             BLACKLIST = config["BLACKLIST"].split(", ")
@@ -85,22 +85,22 @@ def getTags(
 
         character_tags = ""
 
-    elif booru_choice == "e621":
-        match = re.findall(r"\d+", post_link)
-        post_id = int(match[1])
+    # elif booru_choice == "e621":
+    #     match = re.findall(r"\d+", post_link)
+    #     post_id = int(match[1])
 
-        api = E621((e621username_, e621api_key_))
-        post = api.posts.get(post_id)
+    #     api = E621((e621username_, e621api_key_))
+    #     post = api.posts.get(post_id)
 
-        tags = post.tags
-        general_tag_list = tags.general
-        species_list = tags.species
+    #     tags = post.tags
+    #     general_tag_list = tags.general
+    #     species_list = tags.species
 
-        general_tag_list += species_list
-        general_tags = ", ".join(general_tag_list)
-        general_tags = re.sub(r"[()]", r"\\\g<0>", general_tags)
-        general_tags = general_tags.replace("_", " ")
-        character_tags = ""
+    #     general_tag_list += species_list
+    #     general_tags = ", ".join(general_tag_list)
+    #     general_tags = re.sub(r"[()]", r"\\\g<0>", general_tags)
+    #     general_tags = general_tags.replace("_", " ")
+    #     character_tags = ""
 
     character_tags = character_tags.split(" ")[0]
     if lora_option == True:
@@ -162,14 +162,14 @@ def on_ui_settings():
         "booru_tags_danbooru_apikey",
         shared.OptionInfo("", "Danbooru API key", section=section),
     )
-    shared.opts.add_option(
-        "booru_tags_e621_username",
-        shared.OptionInfo("", "e621 Username", section=section),
-    )
-    shared.opts.add_option(
-        "booru_tags_e621_apikey",
-        shared.OptionInfo("", "e621 API key", section=section),
-    )
+    # shared.opts.add_option(
+    #     "booru_tags_e621_username",
+    #     shared.OptionInfo("", "e621 Username", section=section),
+    # )
+    # shared.opts.add_option(
+    #     "booru_tags_e621_apikey",
+    #     shared.OptionInfo("", "e621 API key", section=section),
+    # )
 
 
 def has_settings():
@@ -233,16 +233,16 @@ class BooruPromptsScript(scripts.Script):
         try:
             dbusername = opts.booru_tags_danbooru_username
             dbapi_key = opts.booru_tags_danbooru_apikey
-            e621username_ = opts.booru_tags_e621_username
-            e621api_key_ = opts.booru_tags_e621_apikey
+            # e621username_ = opts.booru_tags_e621_username
+            # e621api_key_ = opts.booru_tags_e621_apikey
 
             set = getTags(
                 search,
                 lora_option,
                 dbusername,
                 dbapi_key,
-                e621username_,
-                e621api_key_,
+                # e621username_,
+                # e621api_key_,
                 nai_option,
                 booru_choice,
             )
@@ -266,7 +266,7 @@ class BooruPromptsScript(scripts.Script):
                         output = gr.Textbox(label="Output", lines=4, interactive=False)
                         with gr.Column():
                             booru_choice = gr.Dropdown(
-                                ["Danbooru", "Safebooru", "e621"],
+                                ["Danbooru", "Safebooru"],  # e621 removed for now
                                 label="Booru Site",
                                 value="Danbooru",
                                 interactive=True,

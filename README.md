@@ -1,7 +1,7 @@
 # Stable Diffusion Booru Tag Getter Extension
 
 Creates a UI element within the [AUTOMATIC1111/stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), for obtaining tags from a specific xbooru post.
-Currently supports: `Danbooru`, `Safebooru`, `e621`.
+Currently supports: `Danbooru`, and `Safebooru`.
 
 ## Preview
 
@@ -24,6 +24,6 @@ Prepends "(masterpiece: 1.2), (best quality:1.2)" to the outputted tags.
 3. Run `python3 -m pip install -r requirements.txt` in the `stable-diffusion-webui/extensions/stable-diffusion-danbooru-tag-getter` directory
 4. Launch the webui and navigate to the "Booru Tags" dropdown at the bottom of `txt2img` and `img2img` pages.
 
-##### Where did the commits go?
+#### Where did the commits go?
 
 I removed all prior commits for privacy reasons.
