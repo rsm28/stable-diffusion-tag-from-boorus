@@ -1,0 +1,2 @@
+pybooru
+e621-stable
