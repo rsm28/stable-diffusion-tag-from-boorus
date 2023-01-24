@@ -23,3 +23,7 @@ Prepends "(masterpiece: 1.2), (best quality:1.2)" to the outputted tags.
 2. Clone this repository into the `stable-diffusion-webui/extensions` directory
 3. Run `python3 -m pip install -r requirements.txt` in the `stable-diffusion-webui/extensions/stable-diffusion-danbooru-tag-getter` directory
 4. Launch the webui and navigate to the "Booru Tags" dropdown at the bottom of `txt2img` and `img2img` pages.
+
+##### Where did the commits go?
+
+I removed all prior commits for privacy reasons.
