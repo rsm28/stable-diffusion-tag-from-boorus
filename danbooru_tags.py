@@ -51,7 +51,7 @@ def getTags(post_link, username_, api_key_):
     general_tags = post["tag_string_general"]
     character_tags = post["tag_string_character"]
 
-    # find parantheses in character tags, and add backslash to escape them
+    # find parentheses in character tags, and add backslash to escape them
     character_tags = re.sub(r"[()]", r"\\\g<0>", character_tags)
     general_tags = re.sub(r"[()]", r"\\\g<0>", general_tags)
 

@@ -39,8 +39,6 @@ def getTags(
     lora_option,
     dbusername_,
     dbapi_key_,
-    e621username_,
-    e621api_key_,
     nai_option,
     booru_choice,
 ):
