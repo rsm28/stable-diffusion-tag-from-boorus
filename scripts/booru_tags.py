@@ -41,6 +41,7 @@ def getTags(
     dbapi_key_,
     nai_option,
     booru_choice,
+    non_char_option,
 ):
 
     (
@@ -54,6 +55,39 @@ def getTags(
     LORA_CLOTHING_BLACKLIST = dict.fromkeys(LORA_CLOTHING_BLACKLIST, None)
     LORA_POSE_BLACKLIST = dict.fromkeys(LORA_POSE_BLACKLIST, None)
     LORA_MISC_BLACKLIST = dict.fromkeys(LORA_MISC_BLACKLIST, None)
+
+    TRAITS = [
+    "hair",
+    "eyes",
+    "ears",
+    "skin",
+    "gloves",
+    "(arknights)",
+    "eye",
+    "horns",
+    "hat",
+    "tail",
+    "pupils",
+    "girl",
+    "breasts",
+    "nails",
+    "polish",
+    "braid",
+]  # eye catches "mole under eye"
+    COMMON_ELEMENTS = [
+    "1girl",
+    "solo",
+    "horns",
+    "mole",
+    "virtual youtuber",
+    "halo",
+    "tail",
+    "ahoge",
+    "bangs",
+    "chest jewel",
+    "ponytail",
+]
+
 
     if booru_choice == "Danbooru":
         match = re.findall(r"\d+", post_link)
@@ -138,6 +172,22 @@ def getTags(
     output_tags_list = list(filter(None, output_tags_list))
     output_tags_list = [x.strip() for x in output_tags_list]
 
+    print(f"output_tags_list: {output_tags_list}")
+
+    if non_char_option == True:
+        #implementation of "pruner.py" from tag_tools      
+        for tag in output_tags_list[:]:
+            if tag in COMMON_ELEMENTS:
+                output_tags_list.remove(tag)
+                
+
+            if " " in tag:
+                tag = tag.split(" ")
+                for t in tag:
+                    if t in TRAITS:
+                        output_tags_list.remove(" ".join(tag))
+                        print(f"Found {tag}")
+
     final_output_tags = ""
     for tag in output_tags_list:
         final_output_tags += tag + ", "
@@ -146,6 +196,11 @@ def getTags(
         final_output_tags = (
             "(masterpiece:1.2), (best quality:1.2), " + final_output_tags
         )
+
+
+                            
+    #find all ", , " and replace with ", "
+    final_output_tags = re.sub(r", , ", ", ", final_output_tags) 
 
     return final_output_tags
 
@@ -209,6 +264,7 @@ class BooruPromptsScript(scripts.Script):
             lora_option,
             nai_option,
             booru_choice,
+            non_char_option,
         ) = self._create_ui()
 
         return [
@@ -218,6 +274,7 @@ class BooruPromptsScript(scripts.Script):
             lora_option,
             nai_option,
             booru_choice,
+            non_char_option,
         ]
 
     def _fetch(
@@ -226,6 +283,7 @@ class BooruPromptsScript(scripts.Script):
         lora_option: bool,
         nai_option: bool,
         booru_choice: str,
+        non_char_option: bool,
         limit=1,
     ):
         try:
@@ -243,6 +301,7 @@ class BooruPromptsScript(scripts.Script):
                 # e621api_key_,
                 nai_option,
                 booru_choice,
+                non_char_option,
             )
 
             return set
@@ -280,6 +339,7 @@ class BooruPromptsScript(scripts.Script):
                     with gr.Row():
                         lora_option = gr.Checkbox(value=False, label="Using LoRA?")
                         nai_option = gr.Checkbox(value=False, label="Using NovelAI?")
+                        non_char_option = gr.Checkbox(value=False, label="Remove Character Traits?")
 
                 with gr.Group(visible=self.is_useable):
                     search = gr.Textbox(
@@ -289,14 +349,14 @@ class BooruPromptsScript(scripts.Script):
                     )
 
         fetch_tags.click(
-            fn=lambda x1, x2, x3, x4: self._fetch(x1, x2, x3, x4),
-            inputs=[search, lora_option, nai_option, booru_choice],
+            fn=lambda x1, x2, x3, x4, x5: self._fetch(x1, x2, x3, x4, x5),
+            inputs=[search, lora_option, nai_option, booru_choice, non_char_option],
             outputs=[output],
             scroll_to_output=False,
             show_progress=True,
         )
 
-        return output, search, lora_option, nai_option, booru_choice, fetch_tags
+        return output, search, lora_option, nai_option, booru_choice, fetch_tags, non_char_option
 
 
 script_callbacks.on_ui_settings(on_ui_settings)
