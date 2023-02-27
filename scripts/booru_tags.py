@@ -100,6 +100,7 @@ def getTags(
         "au ra",
         "viera",
         "miqo'te",
+        "heterochromia",
     ]
 
     if booru_choice == "Danbooru":
@@ -189,6 +190,7 @@ def getTags(
 
     if non_char_option == True:
         # implementation of "pruner.py" from tag_tools
+        output_tags_list.pop(0)  # remove first element (character tag)
         for tag in output_tags_list[:]:
             if tag in COMMON_ELEMENTS:
                 output_tags_list.remove(tag)
