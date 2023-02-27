@@ -57,37 +57,50 @@ def getTags(
     LORA_MISC_BLACKLIST = dict.fromkeys(LORA_MISC_BLACKLIST, None)
 
     TRAITS = [
-    "hair",
-    "eyes",
-    "ears",
-    "skin",
-    "gloves",
-    "(arknights)",
-    "eye",
-    "horns",
-    "hat",
-    "tail",
-    "pupils",
-    "girl",
-    "breasts",
-    "nails",
-    "polish",
-    "braid",
-]  # eye catches "mole under eye"
+        "hair",
+        "eyes",
+        "ears",
+        "skin",
+        "gloves",
+        "(arknights)",
+        "eye",
+        "horns",
+        "hat",
+        "tail",
+        "pupils",
+        "girl",
+        "breasts",
+        "nails",
+        "polish",
+        "braid",
+        "bangs",
+        "bun",
+        "twintails",
+        "chest",
+        "body",
+        "fluff",
+        "costume",
+    ]  # eye catches "mole under eye"
     COMMON_ELEMENTS = [
-    "1girl",
-    "solo",
-    "horns",
-    "mole",
-    "virtual youtuber",
-    "halo",
-    "tail",
-    "ahoge",
-    "bangs",
-    "chest jewel",
-    "ponytail",
-]
-
+        "1girl",
+        "solo",
+        "horns",
+        "mole",
+        "virtual youtuber",
+        "halo",
+        "ahoge",
+        "bangs",
+        "chest jewel",
+        "mature female",
+        "ponytail",
+        "alternative costume",
+        "teeth",
+        "tail",
+        "cowlick",
+        "au ra",
+        "viera",
+        "miqo'te",
+    ]
 
     if booru_choice == "Danbooru":
         match = re.findall(r"\d+", post_link)
@@ -175,18 +188,20 @@ def getTags(
     print(f"output_tags_list: {output_tags_list}")
 
     if non_char_option == True:
-        #implementation of "pruner.py" from tag_tools      
+        # implementation of "pruner.py" from tag_tools
         for tag in output_tags_list[:]:
             if tag in COMMON_ELEMENTS:
                 output_tags_list.remove(tag)
-                
 
             if " " in tag:
+                pre_tag = tag
                 tag = tag.split(" ")
-                for t in tag:
-                    if t in TRAITS:
-                        output_tags_list.remove(" ".join(tag))
-                        print(f"Found {tag}")
+                print(f"tag: {tag}")
+                for subtag in tag:
+                    if subtag in TRAITS:
+                        print(f"subtag: {subtag}")
+                        output_tags_list.remove(pre_tag)
+                        break
 
     final_output_tags = ""
     for tag in output_tags_list:
@@ -197,10 +212,8 @@ def getTags(
             "(masterpiece:1.2), (best quality:1.2), " + final_output_tags
         )
 
-
-                            
-    #find all ", , " and replace with ", "
-    final_output_tags = re.sub(r", , ", ", ", final_output_tags) 
+    # find all ", , " and replace with ", "
+    final_output_tags = re.sub(r", , ", ", ", final_output_tags)
 
     return final_output_tags
 
@@ -339,7 +352,9 @@ class BooruPromptsScript(scripts.Script):
                     with gr.Row():
                         lora_option = gr.Checkbox(value=False, label="Using LoRA?")
                         nai_option = gr.Checkbox(value=False, label="Using NovelAI?")
-                        non_char_option = gr.Checkbox(value=False, label="Remove Character Traits?")
+                        non_char_option = gr.Checkbox(
+                            value=False, label="Remove Character Traits?"
+                        )
 
                 with gr.Group(visible=self.is_useable):
                     search = gr.Textbox(
@@ -356,7 +371,15 @@ class BooruPromptsScript(scripts.Script):
             show_progress=True,
         )
 
-        return output, search, lora_option, nai_option, booru_choice, fetch_tags, non_char_option
+        return (
+            output,
+            search,
+            lora_option,
+            nai_option,
+            booru_choice,
+            fetch_tags,
+            non_char_option,
+        )
 
 
 script_callbacks.on_ui_settings(on_ui_settings)
