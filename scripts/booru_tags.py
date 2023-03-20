@@ -42,6 +42,8 @@ def getTags(
     nai_option,
     booru_choice,
     non_char_option,
+    # sbusername,
+    # sbapikey
 ):
 
     (
@@ -63,7 +65,7 @@ def getTags(
         "skin",
         "gloves",
         "(arknights)",
-        "eye",
+        "mole",
         "horns",
         "hat",
         "tail",
@@ -80,6 +82,8 @@ def getTags(
         "body",
         "fluff",
         "costume",
+        "ponytail",
+        "fang",
     ]  # eye catches "mole under eye"
     COMMON_ELEMENTS = [
         "1girl",
@@ -101,8 +105,11 @@ def getTags(
         "viera",
         "miqo'te",
         "heterochromia",
+        "braid",
+        "two side up",
     ]
-
+    #TODO: move these two to config
+    
     if booru_choice == "Danbooru":
         match = re.findall(r"\d+", post_link)
         post_id = match[0]
@@ -130,7 +137,8 @@ def getTags(
         general_tags = general_tags.replace("_", " ")
 
         character_tags = ""
-
+        #implementing safebooru api/uname is not necessary because safebooru doesn't even want you to use them lol
+        
     # elif booru_choice == "e621":
     #     match = re.findall(r"\d+", post_link)
     #     post_id = int(match[1])
@@ -262,7 +270,6 @@ class BooruPromptsScript(scripts.Script):
             # api_key = (opts.booru_prompts_danbooru_apikey,)
             pass
         else:
-            # self.client: Danbooru = None # type: ignore
             pass
 
     def title(self):
@@ -304,6 +311,8 @@ class BooruPromptsScript(scripts.Script):
         try:
             dbusername = opts.booru_tags_danbooru_username
             dbapi_key = opts.booru_tags_danbooru_apikey
+            # sbusername = opts.booru_tags_safebooru_username
+            # sbapi_key = opts.booru_tags_safebooru_apikey
             # e621username_ = opts.booru_tags_e621_username
             # e621api_key_ = opts.booru_tags_e621_apikey
 
@@ -317,6 +326,8 @@ class BooruPromptsScript(scripts.Script):
                 nai_option,
                 booru_choice,
                 non_char_option,
+                # sbusername,
+                # sbapi_key,
             )
 
             return set
